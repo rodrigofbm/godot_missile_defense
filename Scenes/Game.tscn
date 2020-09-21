@@ -1,0 +1,167 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Assets/Images/tileMapStars.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Images/tileMapGround.png" type="Texture" id=2]
+[ext_resource path="res://Scenes/cannon.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/BulletBrain.cs" type="Script" id=4]
+[ext_resource path="res://Scripts/Player.cs" type="Script" id=5]
+[ext_resource path="res://Assets/Fonts/kenvector_future.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://Assets/Images/gameOverOverlay.png" type="Texture" id=7]
+
+[sub_resource type="CSharpScript" id=1]
+resource_name = "Node2D"
+script/source = "using Godot;
+using System;
+
+public class Node2D : Godot.Node2D {
+  // Called when the node enters the scene tree for the first time.
+  public override void _Ready() {
+    GD.Print(\"Hello world!\");
+  }
+
+  // Called every frame. 'delta' is the elapsed time since the previous frame.
+  public override void _Process(float delta) {
+
+  }
+}
+"
+
+[sub_resource type="TileSet" id=2]
+0/name = "tileMapStars.png 0"
+0/texture = ExtResource( 1 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 256, 256 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+
+[sub_resource type="TileSet" id=3]
+0/name = "tileMapGround.png 0"
+0/texture = ExtResource( 2 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 1024, 384 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+
+[sub_resource type="DynamicFont" id=4]
+size = 38
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 90
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 40
+font_data = ExtResource( 6 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 781.707, 77.7409 )
+
+[node name="Game" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Background" type="Node" parent="."]
+
+[node name="TileMapStars" type="TileMap" parent="Background"]
+tile_set = SubResource( 2 )
+cell_size = Vector2( 256, 256 )
+format = 1
+tile_data = PoolIntArray( -1, 0, 0, -65536, 0, 0, -65535, 0, 0, -65534, 0, 0, -65533, 0, 0, -65532, 0, 0, 65535, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 131071, 0, 0, 65536, 0, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0, 65540, 0, 0, 196607, 0, 0, 131072, 0, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0 )
+
+[node name="TileMapGround" type="TileMap" parent="Background"]
+tile_set = SubResource( 3 )
+cell_size = Vector2( 1024, 400 )
+format = 1
+tile_data = PoolIntArray( 131071, 0, 0, 65536, 0, 0, 65537, 0, 0 )
+
+[node name="Bullets" type="Node" parent="."]
+
+[node name="BulletBrain" type="Node" parent="Bullets"]
+script = ExtResource( 4 )
+PlayerBulletSpeed = 500
+EnemyBulletSpeed = 350
+
+[node name="EnemySpawn" type="Timer" parent="Bullets/BulletBrain"]
+wait_time = 3.0
+autostart = true
+
+[node name="CloudSpawner" type="Timer" parent="Bullets/BulletBrain"]
+wait_time = 4.0
+autostart = true
+
+[node name="Foreground" type="Node" parent="."]
+
+[node name="cannon" parent="Foreground" instance=ExtResource( 3 )]
+position = Vector2( 470.704, 482.044 )
+
+[node name="HUD" type="Node" parent="."]
+
+[node name="Health_Score" type="Label" parent="HUD"]
+margin_right = 1279.0
+margin_bottom = 86.0
+custom_fonts/font = SubResource( 4 )
+text = "HelloWrold"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GameOver" type="Node2D" parent="HUD"]
+visible = false
+
+[node name="Sprite" type="Sprite" parent="HUD/GameOver"]
+position = Vector2( 630.38, 367.634 )
+scale = Vector2( 11.6285, 6.88214 )
+texture = ExtResource( 7 )
+
+[node name="Label" type="Label" parent="HUD/GameOver"]
+margin_top = 209.0
+margin_right = 1280.0
+margin_bottom = 367.0
+custom_fonts/font = SubResource( 5 )
+text = "Game Over"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="HUD/GameOver"]
+margin_top = 359.0
+margin_right = 1280.0
+margin_bottom = 478.0
+custom_fonts/font = SubResource( 6 )
+text = "Click to restart"
+align = 1
+valign = 1
+
+[node name="Player" type="Node" parent="."]
+script = ExtResource( 5 )
+Health = 5
+
+[node name="PlayerHitZone" type="Area2D" parent="Player"]
+position = Vector2( 520.411, 558.665 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerHitZone"]
+position = Vector2( 109.457, 5.33936 )
+shape = SubResource( 7 )
+[connection signal="timeout" from="Bullets/BulletBrain/EnemySpawn" to="Bullets/BulletBrain" method="_on_EnemySpawn_timeout"]
+[connection signal="timeout" from="Bullets/BulletBrain/CloudSpawner" to="Bullets/BulletBrain" method="_on_CloudSpawner_timeout"]
+[connection signal="area_entered" from="Player/PlayerHitZone" to="Player" method="_on_PlayerHitZone_area_entered"]
